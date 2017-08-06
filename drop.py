@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import dropbox
 import pickle
 import os
@@ -24,8 +25,8 @@ def symMap(rD):
             touch(os.path.join(basepath, p['path'].replace('/','',1)))
 
 def authenticate():
-    if os.path.exists(os.path.expanduser('~/lib/db.auth')):
-        return pickle.load(open(os.path.expanduser('~/lib/db.auth')))
+    if os.path.exists(os.path.expanduser('~/.ARM-Dropbox.auth')):
+        return pickle.load(open(os.path.expanduser('~/.ARM-Dropbox.auth')))
     flow = dropbox.client.DropboxOAuth2FlowNoRedirect(key, secret)
     authorize_url = flow.start()
     print '1. Go to: ' + authorize_url
@@ -33,7 +34,7 @@ def authenticate():
     print '3. Copy the authorization code.'
     code = raw_input("Enter the authorization code here: ").strip()
     access_token, user_id = flow.finish(code)
-    pickle.dump((access_token, user_id),open('db.auth','w'))
+    pickle.dump((access_token, user_id),open(os.path.expanduser('~/.ARM-Dropbox.auth'),'w'))
     return access_token, user_id
 
 def listDir(dir):
@@ -116,7 +117,6 @@ def quickGet(f, recursive=False):
         out.write(client.get_file(f).read())
         out.close()
         print 'Downloaded \'' + out.name + '\' from \'' + f + '\''
-
 key = 'g3uu5vbgzb295dw'
 secret = 'xqnukbih7rlerzl'
 ac, id = authenticate()
